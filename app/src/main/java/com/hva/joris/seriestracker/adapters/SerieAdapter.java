@@ -14,7 +14,7 @@ import com.hva.joris.seriestracker.models.Serie;
 
 import java.util.List;
 
-public class SerieAdapter extends RecyclerView.Adapter<SerieAdapter.SerieObjectViewHolder>{
+public class SerieAdapter extends RecyclerView.Adapter<SerieAdapter.SerieViewHolder>{
     private SerieClickListener serieClickListener;
     private List<Serie> series;
     private final Resources resources;
@@ -27,21 +27,21 @@ public class SerieAdapter extends RecyclerView.Adapter<SerieAdapter.SerieObjectV
 
     @NonNull
     @Override
-    public SerieObjectViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public SerieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.serie_card, viewGroup,false);
 
-        return new SerieObjectViewHolder(view, serieClickListener);
+        return new SerieViewHolder(view, serieClickListener);
     }
 
-    public class SerieObjectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class SerieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView titleView;
         public TextView platformView;
         public TextView dateView;
         public SerieAdapter.SerieClickListener serieClickListener;
 
-        public SerieObjectViewHolder(View itemView, SerieAdapter.SerieClickListener serieClickListener){
+        public SerieViewHolder(View itemView, SerieAdapter.SerieClickListener serieClickListener){
             super(itemView);
             itemView.setOnClickListener(this);
 
@@ -59,7 +59,7 @@ public class SerieAdapter extends RecyclerView.Adapter<SerieAdapter.SerieObjectV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SerieObjectViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull SerieViewHolder viewHolder, int i) {
         Serie serieObject = series.get(i);
 
         viewHolder.titleView.setText(serieObject.getName());

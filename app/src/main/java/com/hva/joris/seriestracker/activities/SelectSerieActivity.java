@@ -3,10 +3,14 @@ package com.hva.joris.seriestracker.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.hva.joris.seriestracker.R;
 import com.hva.joris.seriestracker.models.Serie;
@@ -27,6 +31,8 @@ import retrofit2.Response;
 public class SelectSerieActivity extends AppCompatActivity implements SerieAdapter.SerieClickListener {
     private final String API_KEY = "0e2f893025b48f56f5b2fe552e81705d";
 
+    private EditText search;
+    private Button searchButton;
     private List<Serie> mSeries = new ArrayList<>();
     private SerieAdapter adapter;
 
@@ -34,6 +40,9 @@ public class SelectSerieActivity extends AppCompatActivity implements SerieAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_serie);
+
+        search = findViewById(R.id.searchField);
+        searchButton = findViewById(R.id.searchButton);
 
         //Create the recyclerview and set it's layout manager
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -43,7 +52,17 @@ public class SelectSerieActivity extends AppCompatActivity implements SerieAdapt
         adapter = new SerieAdapter(mSeries, getResources(), this);
         recyclerView.setAdapter(adapter);
 
-        requestData();
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!search.getText().toString().isEmpty()) {
+                    requestData(search.getText().toString());
+                } else {
+                    Snackbar.make(v, "Please make sure all fields are filled in correctly", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     public void updateUI(){
@@ -61,14 +80,14 @@ public class SelectSerieActivity extends AppCompatActivity implements SerieAdapt
         finish();
     }
 
-    private void requestData()
+    private void requestData(String query)
     {
         SerieApiService service = SerieApiService.retrofit.create(SerieApiService.class);
 
         /**
          * Make an a-synchronous call by enqueing and definition of callbacks.
          */
-        Call<SerieList> call = service.getSeries(API_KEY);
+        Call<SerieList> call = service.searchSeries(API_KEY, query);
         call.enqueue(new Callback<SerieList>() {
 
             @Override

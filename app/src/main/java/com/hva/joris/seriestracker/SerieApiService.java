@@ -22,4 +22,7 @@ public interface SerieApiService {
 
     @GET("/3/tv/popular")
     Call<SerieList> getSeries(@Query("api_key") String apiKey);
+
+    @GET("/3/search/tv")
+    Call<SerieList> searchSeries(@Query("api_key") String apiKey, @Query("query") String query);
 }
